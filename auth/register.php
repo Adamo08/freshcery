@@ -38,7 +38,7 @@
                 // Hash the password and insert the new user
                 $hashed_password = hash('sha256', $password); // SHA256 for hashing
 
-                $stmt = $conn->prepare("INSERT INTO users (full_name, email, username, password) VALUES (:full_name, :email, :username, :password)");
+                $stmt = $conn->prepare("INSERT INTO users (full_name, email, username, password,image) VALUES (:full_name, :email, :username, :password,'user.png')");
                 $result = $stmt->execute([
                     ':full_name' => $full_name,
                     ':email' => $email,
