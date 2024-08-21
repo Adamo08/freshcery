@@ -162,16 +162,17 @@
                 
                 <?php 
                 
-                    foreach ($categories as $category) {
-                        echo '<div class="item">';
-                        echo '    <div class="card rounded-0 border-0 text-center">';
-                        echo '        <img src="assets/img/categories/' . htmlspecialchars($category['image']) . '">';
-                        echo '        <div class="card-img-overlay d-flex align-items-center justify-content-center">';
-                        echo '            <a href="shop.php?category=' . urlencode($category['name']) . '" class="btn btn-primary btn-lg">' . htmlspecialchars($category['name']) . '</a>';
-                        echo '        </div>';
-                        echo '    </div>';
-                        echo '</div>';
-                    }
+                foreach ($categories as $category) {
+                    echo '<div class="item">';
+                    echo '    <div class="card rounded-0 border-0 text-center">';
+                    echo '        <img src="assets/img/categories/' . htmlspecialchars($category['image']) . '" style="width: auto; height: 250px; object-fit: cover;">';
+                    echo '        <div class="card-img-overlay d-flex align-items-center justify-content-center">';
+                    echo '            <a href="shop.php?category=' . urlencode($category['name']) . '" class="btn btn-primary btn-lg">' . htmlspecialchars($category['name']) . '</a>';
+                    echo '        </div>';
+                    echo '    </div>';
+                    echo '</div>';
+                }
+                
                 
                 ?>
     

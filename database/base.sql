@@ -43,7 +43,12 @@ VALUES
     ('Vegetables', 'All kinds of vegetables', 'images/vegetables.jpg', 'icons/vegetables-icon.png'),
     ('Fruits', 'All kinds of fruits', 'images/fruits.jpg', 'icons/fruits-icon.png'),
     ('Meats', 'Various types of meats', 'images/meats.jpg', 'icons/meats-icon.png'),
-    ('Fishes', 'Different types of fishes', 'images/fishes.jpg', 'icons/fishes-icon.png');
+    ('Fishes', 'Different types of fishes', 'images/fishes.jpg', 'icons/fishes-icon.png'),
+    ('Dairy Products', 'Various dairy products like milk, cheese, and butter', 'images/dairy.jpg', 'icons/dairy-icon.png'),
+    ('Beverages', 'A wide range of drinks including juices, sodas, and teas', 'images/beverages.jpg', 'icons/beverages-icon.png'),
+    ('Bakery Products', 'Freshly baked bread, cakes, and pastries', 'images/bakery.jpg', 'icons/bakery-icon.png'),
+    ('Snacks', 'A variety of snacks including chips, nuts, and cookies', 'images/snacks.jpg', 'icons/snacks-icon.png');
+
 
 
 
