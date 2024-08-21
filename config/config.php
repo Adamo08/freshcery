@@ -2,7 +2,7 @@
 
 
     if (!isset($_SERVER['HTTP_REFERER'])){
-        header("Location: http://localhost/Freshcery/index.php");
+        @header("Location: http://localhost/Freshcery/index.php");
         exit();
     }
 

@@ -1,10 +1,70 @@
 
     
+    <?php 
+        // If a user is already loged in
+        session_start();
+        if (isset($_SESSION['user'])){
+            header('Location: http://localhost/Freshcery/');
+        }
+    ?>
 
-<?php
-    // Including the helpers file
-    include '../helpers/helpers.php';
-?>
+    <?php
+        // Including the helpers file
+        include '../helpers/helpers.php';
+        // Including the database file
+        include_once '../config/config.php';
+
+    ?>
+
+    <?php
+
+        $msg = ""; // A message to be shown if an error occurs
+
+        if (isset($_POST['submit'])) {
+
+            // Retrieve form data
+            $username = trim($_POST['username']);
+            $password = trim($_POST['password']);
+
+            // Validation
+            if (empty($username) || empty($password)) {
+                $msg = "<li style='color:red'>Both fields are required.</li>";
+            } else {
+                // Hash the password to compare it with the stored hash
+                $hashed_password = hash('sha256', $password); // SHA256 for hashing
+
+                // Check if the user exists and the password is correct
+                $stmt = $conn->prepare("SELECT * FROM `users` WHERE (username = :username OR email = :username) AND password = :password");
+                $stmt->execute([':username' => $username, ':password' => $hashed_password]);
+                $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                $user = $stmt->fetch();
+                if ($stmt->rowCount() > 0) {
+                    // User found, log them in
+                    session_start();
+                    $_SESSION['user'] = $user; // Set session variable
+
+
+                    // print_r($user);
+
+                    // Redirect to a protected page
+                    header('Location: http://localhost/Freshcery/');
+                    exit;
+                } else {
+                    $msg = "<li style='color:red'>Invalid username or password.</li>";
+                }
+            }
+        }
+
+    ?>
+
+    <?php 
+        // If a user is already loged in
+        if (isset($_SESSION['user'])){
+            header('Location: http://localhost/Freshcery/');
+        }
+    ?>
+
+
 
 
 
@@ -51,12 +111,19 @@
                             <a href="<?php echo URL('shop.php'); ?>" class="nav-link">Shop</a>
                         </li>
                         <li class="nav-item">
+                            <a href="<?php echo URL('about.php'); ?>" class="nav-link">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo URL('contact.php'); ?>" class="nav-link">Contact</a>
+                        </li>
+                        <li class="nav-item">
                             <a href="<?php echo URL('auth/register.php'); ?>" class="nav-link">Register</a>
                         </li>
                         <li class="nav-item">
                             <a href="<?php echo URL('auth/login.php'); ?>" class="nav-link">Login</a>
                         </li>
-                        <li class="nav-item dropdown">
+
+                        <!-- <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="avatar-header"><img src="<?php echo URL('assets/img/logo/avatar.jpg'); ?>"></div> John Doe
                             </a>
@@ -69,8 +136,8 @@
                             <a href="<?php echo URL('cart.php'); ?>" class="nav-link" data-toggle="" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-shopping-basket"></i> <span class="badge badge-primary">5</span>
                             </a>
-                        
-                        </li>
+                        </li> -->
+
                     </ul>
                 </div>
 
@@ -94,15 +161,15 @@
 
                     <div class="card card-login mb-5">
                         <div class="card-body">
-                            <form class="form-horizontal" action="index.html">
+                            <form class="form-horizontal" action="" method="POST">
                                 <div class="form-group row mt-3">
                                     <div class="col-md-12">
-                                        <input class="form-control" type="text" required="" placeholder="Username">
+                                        <input class="form-control" type="text" required="" placeholder="Username Or Email" name="username">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-md-12">
-                                        <input class="form-control" type="password" required="" placeholder="Password">
+                                        <input class="form-control" type="password" required="" placeholder="Password" name="password">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -114,9 +181,18 @@
                                         <!-- <a href="login.html" class="text-light"><i class="fa fa-bell"></i> Forgot password?</a> -->
                                     </div>
                                 </div>
+                                <div class="form-group mt-4">
+                                    <div class="col-md-12">
+                                        <?php 
+                                            if (!empty($msg)){
+                                                echo $msg;
+                                            }
+                                        ?>
+                                    </div>
+                                </div>
                                 <div class="form-group row text-center mt-4">
                                     <div class="col-md-12">
-                                        <button type="submit" class="btn btn-primary btn-block text-uppercase">Log In</button>
+                                        <button type="submit" class="btn btn-primary btn-block text-uppercase" name="submit">Log In</button>
                                     </div>
                                 </div>
                                 <div class="mt-4">

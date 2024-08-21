@@ -1,3 +1,13 @@
+    
+    
+    <?php 
+        // If a user is already loged in
+        session_start();
+        if (isset($_SESSION['user'])){
+            header('Location: http://localhost/Freshcery/');
+        }
+    ?>
+    
     <?php
         // Including the helpers file
         include_once '../helpers/helpers.php';
@@ -12,50 +22,50 @@
         
         $msg = ""; // A message to be shown if an error occurs
 
-    if (isset($_POST['submit'])) {
+        if (isset($_POST['submit'])) {
 
-        // Retrieve form data
-        $full_name = trim($_POST['full_name']);
-        $email = trim($_POST['email']);
-        $username = trim($_POST['username']);
-        $password = trim($_POST['password']);
-        $repassword = trim($_POST['repassword']);
+            // Retrieve form data
+            $full_name = trim($_POST['full_name']);
+            $email = trim($_POST['email']);
+            $username = trim($_POST['username']);
+            $password = trim($_POST['password']);
+            $repassword = trim($_POST['repassword']);
 
-        // Validation
-        if (empty($full_name) || empty($email) || empty($username) || empty($password) || empty($repassword)) {
-            $msg = "<li style='color:red'>All fields are required.</li>";
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $msg = "<li style='color:red'>Invalid email format.</li>";
-        } elseif ($password !== $repassword) {
-            $msg = "<li style='color:red'>Passwords do not match.</li>";
-        } else {
-            // Check if the username or email already exists
-            $stmt = $conn->prepare("SELECT id FROM `users` WHERE email = :email OR username = :username");
-            $stmt->execute([':email' => $email, ':username' => $username]);
-            if ($stmt->rowCount() > 0) {
-                $msg = "<li style='color:red'>Email or username already exists.</li>";
+            // Validation
+            if (empty($full_name) || empty($email) || empty($username) || empty($password) || empty($repassword)) {
+                $msg = "<li style='color:red'>All fields are required.</li>";
+            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $msg = "<li style='color:red'>Invalid email format.</li>";
+            } elseif ($password !== $repassword) {
+                $msg = "<li style='color:red'>Passwords do not match.</li>";
             } else {
-                // Hash the password and insert the new user
-                $hashed_password = hash('sha256', $password); // SHA256 for hashing
-
-                $stmt = $conn->prepare("INSERT INTO users (full_name, email, username, password,image) VALUES (:full_name, :email, :username, :password,:image)");
-                $result = $stmt->execute([
-                    ':full_name' => $full_name,
-                    ':email' => $email,
-                    ':username' => $username,
-                    ':password' => $hashed_password,
-                    ':image' => 'user.png',
-                ]);
-
-                if ($result) {
-                    // Redirect the user to the login page
-                    header('Location: login.php');
+                // Check if the username or email already exists
+                $stmt = $conn->prepare("SELECT id FROM `users` WHERE email = :email OR username = :username");
+                $stmt->execute([':email' => $email, ':username' => $username]);
+                if ($stmt->rowCount() > 0) {
+                    $msg = "<li style='color:red'>Email or username already exists.</li>";
                 } else {
-                    $msg = "<li style='color:red'>Registration failed. Please try again.</li>";
+                    // Hash the password and insert the new user
+                    $hashed_password = hash('sha256', $password); // SHA256 for hashing
+
+                    $stmt = $conn->prepare("INSERT INTO users (full_name, email, username, password,image) VALUES (:full_name, :email, :username, :password,:image)");
+                    $result = $stmt->execute([
+                        ':full_name' => $full_name,
+                        ':email' => $email,
+                        ':username' => $username,
+                        ':password' => $hashed_password,
+                        ':image' => 'user.png',
+                    ]);
+
+                    if ($result) {
+                        // Redirect the user to the login page
+                        header('Location: login.php');
+                    } else {
+                        $msg = "<li style='color:red'>Registration failed. Please try again.</li>";
+                    }
                 }
             }
         }
-    }
     
     ?>
 
@@ -106,12 +116,19 @@
                             <a href="<?php echo URL('shop.php'); ?>" class="nav-link">Shop</a>
                         </li>
                         <li class="nav-item">
+                            <a href="<?php echo URL('about.php'); ?>" class="nav-link">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo URL('contact.php'); ?>" class="nav-link">Contact</a>
+                        </li>
+                        <li class="nav-item">
                             <a href="<?php echo URL('auth/register.php'); ?>" class="nav-link">Register</a>
                         </li>
                         <li class="nav-item">
                             <a href="<?php echo URL('auth/login.php'); ?>" class="nav-link">Login</a>
                         </li>
-                        <li class="nav-item dropdown">
+
+                        <!-- <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="avatar-header"><img src="<?php echo URL('assets/img/logo/avatar.jpg'); ?>"></div> John Doe
                             </a>
@@ -125,7 +142,8 @@
                                 <i class="fa fa-shopping-basket"></i> <span class="badge badge-primary">5</span>
                             </a>
                         
-                        </li>
+                        </li> -->
+
                     </ul>
                 </div>
 

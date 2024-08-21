@@ -2,7 +2,19 @@
 
     <?php 
         include_once "includes/header.php";
+        // Include the database configuration
+        include 'config/config.php';
     ?>
+
+    <?php
+        
+        // Fetch all categories from the database
+        $stmt = $conn->prepare("SELECT name, image FROM categories");
+        $stmt->execute();
+        $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    ?>
+
 
     <div id="page-content" class="page-content">
         <div class="banner">
@@ -138,7 +150,7 @@
                     </div>
 
                     <div class="col-md-12 mt-5 text-center">
-                        <a href="shop.html" class="btn btn-primary btn-lg">SHOP NOW</a>
+                        <a href="shop.php" class="btn btn-primary btn-lg">SHOP NOW</a>
                     </div>
                 </div>
             </div>
@@ -147,60 +159,22 @@
         <section id="categories" class="pb-0 gray-bg">
             <h2 class="title">Categories</h2>
             <div class="landing-categories owl-carousel">
-                <div class="item">
-                    <div class="card rounded-0 border-0 text-center">
-                        <img src="assets/img/vegetables.jpg">
-                        <div class="card-img-overlay d-flex align-items-center justify-content-center">
-                            <!-- <h4 class="card-title">Vegetables</h4> -->
-                            <a href="shop.html" class="btn btn-primary btn-lg">Vegetables</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="card rounded-0 border-0 text-center">
-                        <img src="assets/img/fruits.jpg">
-                        <div class="card-img-overlay d-flex align-items-center justify-content-center">
-                            <!-- <h4 class="card-title">Fruits</h4> -->
-                            <a href="shop.html" class="btn btn-primary btn-lg">Fruits</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="card rounded-0 border-0 text-center">
-                        <img src="assets/img/meats.jpg">
-                        <div class="card-img-overlay d-flex align-items-center justify-content-center">
-                            <!-- <h4 class="card-title">Meats</h4> -->
-                            <a href="shop.html" class="btn btn-primary btn-lg">Meats</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="card rounded-0 border-0 text-center">
-                        <img src="assets/img/fish.jpg">
-                        <div class="card-img-overlay d-flex align-items-center justify-content-center">
-                            <!-- <h4 class="card-title">Fishes</h4> -->
-                            <a href="shop.html" class="btn btn-primary btn-lg">Fishes</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="card rounded-0 border-0 text-center">
-                        <img src="assets/img/frozen.jpg">
-                        <div class="card-img-overlay d-flex align-items-center justify-content-center">
-                            <!-- <h4 class="card-title">Frozen Foods</h4> -->
-                            <a href="shop.html" class="btn btn-primary btn-lg">Frozen Foods</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="card rounded-0 border-0 text-center">
-                        <img src="assets/img/package.jpg">
-                        <div class="card-img-overlay d-flex align-items-center justify-content-center">
-                            <!-- <h4 class="card-title">Package</h4> -->
-                            <a href="shop.html" class="btn btn-primary btn-lg">Package</a>
-                        </div>
-                    </div>
-                </div>
+                
+                <?php 
+                
+                    foreach ($categories as $category) {
+                        echo '<div class="item">';
+                        echo '    <div class="card rounded-0 border-0 text-center">';
+                        echo '        <img src="assets/img/categories/' . htmlspecialchars($category['image']) . '">';
+                        echo '        <div class="card-img-overlay d-flex align-items-center justify-content-center">';
+                        echo '            <a href="shop.php?category=' . urlencode($category['name']) . '" class="btn btn-primary btn-lg">' . htmlspecialchars($category['name']) . '</a>';
+                        echo '        </div>';
+                        echo '    </div>';
+                        echo '</div>';
+                    }
+                
+                ?>
+    
             </div>
         </section>
     </div>
