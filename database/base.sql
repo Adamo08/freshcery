@@ -51,5 +51,38 @@ VALUES
 
 
 
+-- Creating the `products` table
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,                -- Unique identifier for each product
+    name VARCHAR(255) NOT NULL,                       -- Name of the product
+    description TEXT,                                 -- Detailed description of the product
+    price DECIMAL(10, 2) NOT NULL CHECK (price >= 0), -- Price of the product; must be non-negative
+    quantity INT NOT NULL CHECK (quantity >= 0),      -- Quantity available in stock; must be non-negative
+    discount DECIMAL(5, 2) DEFAULT 0.00 CHECK (discount >= 0 AND discount <= 100), -- Discount percentage; must be between 0 and 100
+    category_id INT,                                  -- Foreign key to link to a categories table
+    image VARCHAR(255),                               -- Path to the product image
+    expiration_date DATE,                             -- Expiration date of the product
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,   -- Timestamp when the product was created
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Timestamp for last update
+    is_active BOOLEAN DEFAULT TRUE,                   -- Whether the product is active or not
+    sku VARCHAR(100) UNIQUE,                         -- Stock Keeping Unit for inventory management; must be unique
+    FOREIGN KEY (category_id) REFERENCES categories(id) -- Foreign key constraint
+);
 
+-- Inserting some values to the `products` table
+INSERT INTO products (name, description, price, quantity, discount, category_id, image, sku, expiration_date)
+VALUES 
+    ('Organic Apples', 'Freshly picked organic apples', 3.99, 100, 10.00, 2, 'products/apples.jpg', 'SKU001', '2024-12-31'),  -- Fruits
+    ('Whole Chicken', 'Free-range whole chicken', 12.99, 50, 5.00, 3, 'products/chicken.jpg', 'SKU002', '2024-11-15'),  -- Meats
+    ('Almond Milk', 'Unsweetened almond milk, 1L', 2.49, 200, 0.00, 5, 'products/almond_milk.jpg', 'SKU003', '2024-10-05'),  -- Dairy Products
+    ('Whole Wheat Bread', 'Freshly baked whole wheat bread', 2.99, 75, 0.00, 7, 'products/whole_wheat_bread.jpg', 'SKU004', '2024-09-30'),  -- Bakery Products
+    ('Cheddar Cheese', 'Aged cheddar cheese, 200g', 4.99, 30, 15.00, 5, 'products/cheddar_cheese.jpg', 'SKU005', '2025-02-28'),  -- Dairy Products
+    ('Brown Rice', 'Organic brown rice, 500g', 3.29, 60, 5.00, 6, 'products/brown_rice.jpg', 'SKU006', '2025-01-10'),  -- Beverages
+    ('Olive Oil', 'Extra virgin olive oil, 500ml', 6.49, 40, 0.00, 6, 'products/olive_oil.jpg', 'SKU007', '2026-06-20'),  -- Beverages
+    ('Greek Yogurt', 'Plain Greek yogurt, 500g', 5.79, 100, 10.00, 5, 'products/greek_yogurt.jpg', 'SKU008', '2024-08-15'),  -- Dairy Products
+    ('Granola Bars', 'Pack of 6 granola bars', 3.99, 150, 0.00, 8, 'products/granola_bars.jpg', 'SKU009', '2024-12-01'),  -- Snacks
+    ('Chicken Breasts', 'Boneless chicken breasts, 500g', 9.49, 70, 0.00, 3, 'products/chicken_breasts.jpg', 'SKU010', '2024-11-25');  -- Meats
 
+-- Adding a views colums to the `products` table
+ALTER TABLE products
+ADD views INT DEFAULT 0;

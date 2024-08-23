@@ -1,6 +1,9 @@
     <?php 
         include_once "includes/header.php";
-    ?>
+        // Include the database configuration
+        include 'config/config.php';
+    ?> 
+
 
     <div id="page-content" class="page-content">
         <div class="banner">
