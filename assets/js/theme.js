@@ -68,32 +68,70 @@ $(document).ready(function(){
 
     });
 
-    $('.product-carousel').owlCarousel({
-        loop: true,
-        items: 4,
-        margin: 15,
-        autoplay: false,
-        dots:false,
-        autoplayTimeout: 8000,
-        rewindSpeed : 8000,
-        nav: true,
-        navText : ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>'],
-        responsive: {
-            0: {
-                items: 1
-            },
-            768: {
-                items: 2
-            },
-            990: {
-                items: 3
-            },
-            1170: {
-                items: 4
+    $('.product-carousel').each(function() {
+        var productCount = $(this).find('.item').length;
+        var owlSettings = {
+            items: 4,
+            margin: 15,
+            autoplay: false,
+            dots: false,
+            autoplayTimeout: 8000,
+            rewind: true,
+            nav: true,
+            navText: ['<i class="fa fa-angle-left" aria-hidden="true"></i>', '<i class="fa fa-angle-right" aria-hidden="true"></i>'],
+            responsive: {
+                0: {
+                    items: 1
+                },
+                768: {
+                    items: 2
+                },
+                990: {
+                    items: 3
+                },
+                1170: {
+                    items: 4
+                }
             }
+        };
+    
+        if (productCount <= 1) {
+            owlSettings.loop = false;
+            owlSettings.rewind = true;
+        } else {
+            owlSettings.loop = true;
         }
-
+    
+        $(this).owlCarousel(owlSettings);
     });
+    
+
+    // $('.product-carousel').owlCarousel({
+    //     loop: true,
+    //     items: 4,
+    //     margin: 15,
+    //     autoplay: false,
+    //     dots:false,
+    //     autoplayTimeout: 8000,
+    //     rewindSpeed : 8000,
+    //     nav: true,
+    //     navText : ['<i class="fa fa-angle-left" aria-hidden="true"></i>','<i class="fa fa-angle-right" aria-hidden="true"></i>'],
+    //     responsive: {
+    //         0: {
+    //             items: 1
+    //         },
+    //         768: {
+    //             items: 2
+    //         },
+    //         990: {
+    //             items: 3
+    //         },
+    //         1170: {
+    //             items: 4
+    //         }
+    //     }
+
+    // });
 
     $(".vertical-spin").TouchSpin({
         verticalbuttons: true,
