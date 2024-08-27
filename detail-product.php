@@ -29,9 +29,97 @@
             $stmt->execute([':category_id' => $category_id, ':id' => $product['id']]);
             $related_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+
+            // Validating the product
+            if (isset($_SESSION['user'])){
+
+                $user_id = $_SESSION['user']['id'];
+                $sql = "SELECT * FROM card WHERE user_id = :user_id AND product_id = :product_id";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute([':user_id' => $user_id, ':product_id' => $id]);
+                $product_in_card = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($product_in_card){
+                    $product_in_card = true;
+                } 
+                else {
+                    $product_in_card = false;
+                }
+            }
+
         }
-        else{
-            echo "Not found!";
+
+        // Adding product to the card
+        if (isset($_POST['submit'])) {
+            $product_id = $_POST['product_id'];
+            $product_name = $_POST['product_name'];
+            $product_description = $_POST['product_description'];
+            $product_price = $_POST['price'];
+            $stock = $_POST['stock'];
+            $quantity = $_POST['quantity'];
+            $discount = $_POST['discount'];
+            $discounted_price = $_POST['discounted_price'];
+            $product_image = $_POST['image'];
+            $product_sku = $_POST['sku'];
+            $product_status = $_POST['status'];
+            $expiration_date = $_POST['expiration_date'];
+            $category_id = $_POST['category_id'];
+            $user_id = $_POST['user_id'];
+
+            // Inserting to the card table 
+            try {
+                // SQL query to insert data into the card table
+                $sql = "INSERT INTO card (
+                            name,
+                            description,
+                            product_id,
+                            user_id,
+                            category_id,
+                            image,
+                            price,
+                            discount,
+                            discounted_price,
+                            stock,
+                            product_quantity,
+                            expiration_date
+                        )
+                        VALUES (
+                            :name,
+                            :description,
+                            :product_id,
+                            :user_id,
+                            :category_id,
+                            :image,
+                            :price,
+                            :discount,
+                            :discounted_price,
+                            :stock,
+                            :product_quantity,
+                            :expiration_date
+                        )";
+        
+                // Prepare the SQL statement
+                $stmt = $conn->prepare($sql);
+        
+                // Bind the parameters
+                $stmt->bindParam(':name', $product_name);
+                $stmt->bindParam(':description', $product_description);
+                $stmt->bindParam(':product_id', $product_id);
+                $stmt->bindParam(':user_id', $user_id);
+                $stmt->bindParam(':category_id', $category_id);
+                $stmt->bindParam(':image', $product_image);
+                $stmt->bindParam(':price', $product_price);
+                $stmt->bindParam(':discount', $discount);
+                $stmt->bindParam(':discounted_price', $discounted_price);
+                $stmt->bindParam(':stock', $stock);
+                $stmt->bindParam(':product_quantity', $quantity);
+                $stmt->bindParam(':expiration_date', $expiration_date);
+        
+                // Execute the SQL statement
+                $stmt->execute();
+
+            } catch (PDOException $e) {
+                $msg =  "Error: " . $e->getMessage();
+            }
         }
     
     ?>
@@ -82,72 +170,64 @@
                         <p class="mb-1">
                             <strong>Quantity</strong>
                         </p>
-                        <div class="row">
-                            <div class="col-sm-5">
-                                <input 
-                                    class="form-control" 
-                                    type="number" 
-                                    min="1" 
-                                    data-bts-button-down-class="btn btn-primary" 
-                                    data-bts-button-up-class="btn btn-primary" 
-                                    value="1" 
-                                    name="vertical-spin">
-                            </div>
-                            <div class="col-sm-6"><span class="pt-1 d-inline-block">Pack (1000 gram)</span></div>
-                        </div>
+                        <form action="" method="POST" id="form-data">
 
-                        <button class="mt-3 btn btn-primary btn-lg">
-                            <i class="fa fa-shopping-basket"></i> Add to Cart
-                        </button>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <input 
+                                        class="form-control" 
+                                        type="number" 
+                                        min="1" 
+                                        max="<?=$product['quantity']?>"
+                                        data-bts-button-down-class="btn btn-primary" 
+                                        data-bts-button-up-class="btn btn-primary" 
+                                        value="1" 
+                                        name="quantity">
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="pt-1 d-inline-block">Pack (1000 gram)</span>
+                                </div>
+                            </div>
+
+                            <!-- Hidden inputs to store product and user information -->
+                            <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']); ?>">
+                            <input type="hidden" name="product_name" value="<?= htmlspecialchars($product['name']); ?>">
+                            <input type="hidden" name="product_description" value="<?= htmlspecialchars($product['description']); ?>">
+                            <input type="hidden" name="stock" value="<?= htmlspecialchars($product['quantity']); ?>">
+                            <input type="hidden" name="price" value="<?= htmlspecialchars($product['price']); ?>">
+                            <input type="hidden" name="discount" value="<?= htmlspecialchars($product['discount']); ?>">
+                            <input type="hidden" name="discounted_price" value="<?= htmlspecialchars($discounted_price); ?>">
+                            <input type="hidden" name="image" value="<?= htmlspecialchars($product['image']); ?>">
+                            <input type="hidden" name="sku" value="<?= htmlspecialchars($product['sku']); ?>">
+                            <input type="hidden" name="status" value="<?= htmlspecialchars($product['is_active']); ?>">
+                            <input type="hidden" name="expiration_date" value="<?= htmlspecialchars($product['expiration_date']); ?>">
+                            <input type="hidden" name="category_id" value="<?= htmlspecialchars($product['category_id']); ?>">
+
+                            <!-- Hidden input for the user ID -->
+                            <input type="hidden" name="user_id" value="<?= htmlspecialchars($_SESSION['user']['id']); ?>">
+
+                            <?php if ($product_in_card):?>
+                                <button 
+                                    class="btn-insert mt-4 btn btn-primary btn-lg"
+                                    disabled
+                                >
+                                    <i class="fa fa-shopping-basket"></i> Product Added
+                                </button>
+                            <?php else:?>
+                                <button 
+                                    class="btn-insert mt-4 btn btn-primary btn-lg"
+                                    type="submit"
+                                    name="submit"
+                                >
+                                    <i class="fa fa-shopping-basket"></i> Add to Cart
+                                </button>
+                            <?php endif?>
+
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- <section id="related-product">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 class="title">Related Products</h2>
-                        <div class="product-carousel owl-carousel">
-                            <div class="item">
-                                <div class="card card-product">
-                                    <div class="card-ribbon">
-                                        <div class="card-ribbon-container right">
-                                            <span class="ribbon ribbon-primary">SPECIAL</span>
-                                        </div>
-                                    </div>
-                                    <div class="card-badge">
-                                        <div class="card-badge-container left">
-                                            <span class="badge badge-default">
-                                                Until 2018
-                                            </span>
-                                            <span class="badge badge-primary">
-                                                20% OFF
-                                            </span>
-                                        </div>
-                                        <img src="assets/img/meats.jpg" alt="Card image 2" class="card-img-top">
-                                    </div>
-                                    <div class="card-body">
-                                        <h4 class="card-title">
-                                            <a href="detail-product.html">Product Title</a>
-                                        </h4>
-                                        <div class="card-price">
-                                            <span class="discount">Rp. 300.000</span>
-                                            <span class="reguler">Rp. 200.000</span>
-                                        </div>
-                                        <a href="detail-product.html" class="btn btn-block btn-primary">
-                                            Add to Cart
-                                        </a>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section> -->
 
         <!-- A section to show the related products  -->
         <?php if (!empty($related_products)): ?>
@@ -270,6 +350,32 @@
                 var value = $(this).val();
                 value = value.replace(/^(0*)/,"");
                 $(this).val(1);
+            });
+
+            $(".btn-insert").on("click",function(e){
+                e.preventDefault();
+                
+                var form_data = $("#form-data").serialize() + '&submit=submit';
+
+                // Ajaxing
+                $.ajax({
+                    type: "POST",
+                    url: "detail-product.php?id=<?=$product_id?>", // Replace with your PHP script URL
+                    data: form_data,
+                    success: function(response) {
+                        // Handle success response from server
+                        alert("Product added to cart successfully.");
+                        // Optionally, you could update the UI or redirect
+
+                        $(".btn-insert")
+                            .html("<i class='fa fa-shopping-basket'></i> Product Added")
+                            .prop("disabled",true);
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response from server
+                        alert("An error occurred: " + error);
+                    }
+                });
             });
 
         })

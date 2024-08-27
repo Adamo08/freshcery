@@ -2,6 +2,18 @@
 
     <?php 
         include_once "includes/header.php";
+        include_once "config/config.php";
+    ?>
+
+    <?php 
+
+        // Getting the list of the products added by the user
+        $sql = "SELECT * FROM card WHERE user_id = :user_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':user_id', $_SESSION['user']['id']);
+        $stmt->execute();
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     ?>
 
 
@@ -37,89 +49,68 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <img src="assets/img/fish.jpg" width="60">
-                                        </td>
-                                        <td>
-                                            Ikan Segar<br>
-                                            <small>1000g</small>
-                                        </td>
-                                        <td>
-                                            Rp 30.000
-                                        </td>
-                                        <td>
-                                            <input class="form-control" type="number" min="1" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary" value="1" name="vertical-spin">
-                                        </td>
-                                        <td>
-                                            <a href="#" class="btn btn-primary">UPDATE</a>
-                                        </td>
-                                        <td>
-                                            Rp 30.000
-                                        </td>
-                                        <td>
-                                            <a href="javasript:void" class="text-danger"><i class="fa fa-times"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="assets/img/meats.jpg" width="60">
-                                        </td>
-                                        <td>
-                                            Sirloin<br>
-                                            <small>1000g</small>
-                                        </td>
-                                        <td>
-                                            Rp 120.000
-                                        </td>
-                                        <td>
-                                            <input class="form-control" type="number" min="1" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary" value="1" name="vertical-spin">
-                                        </td>
-                                        <td>
-                                            <a href="#" class="btn btn-primary">UPDATE</a>
-                                        </td>
-                                        <td>
-                                            Rp 120.000
-                                        </td>
-                                        <td>
-                                            <a href="javasript:void" class="text-danger"><i class="fa fa-times"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img src="assets/img/vegetables.jpg" width="60">
-                                        </td>
-                                        <td>
-                                            Mix Vegetables<br>
-                                            <small>1000g</small>
-                                        </td>
-                                        <td>
-                                            Rp 30.000
-                                        </td>
-                                        <td>
-                                            <input class="form-control" type="number" min="1" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary" value="1" name="vertical-spin">
-                                        </td>
-                                        <td>
-                                            <a href="#" class="btn btn-primary">UPDATE</a>
-                                        </td>
-                                        <td>
-                                            Rp 30.000
-                                        </td>
-                                        <td>
-                                            <a href="javasript:void" class="text-danger"><i class="fa fa-times"></i></a>
-                                        </td>
-                                    </tr>
+                                <?php
+                                    $total_price = 0; // Initialize total price variable
+
+                                    foreach ($products as $product):
+                                        // Updated Price
+                                        $discount = $product['discount'];
+                                        $price = $product['price'];
+                                        $updated_price = $price - ($price * $discount / 100);
+
+                                        // Total price for this row
+                                        $product_quantity = $product['product_quantity'];
+                                        $subtotal = $updated_price * $product_quantity;
+
+                                        // Add to the total price
+                                        $total_price += $subtotal;
+                                ?>
+                                        <tr>
+                                            <td>
+                                                <img src='<?php echo URL("assets/img/$product[image]") ?>' width="60">
+                                            </td>
+                                            <td>
+                                                <?=$product['name']?><br>
+                                                <small>1000g</small>
+                                            </td>
+                                            <td>
+                                                Rp <?$updated_price?>
+                                            </td>
+                                            <td>
+                                                <input 
+                                                    class="form-control" 
+                                                    type="number" 
+                                                    min="1" 
+                                                    data-bts-button-down-class="btn btn-primary" 
+                                                    data-bts-button-up-class="btn btn-primary" 
+                                                    value="<?=$product['product_quantity']?>" 
+                                                    name="vertical-spin"
+                                                >
+                                            </td>
+                                            <td>
+                                                <a 
+                                                    href="#" 
+                                                    class="btn btn-primary">UPDATE</a>
+                                            </td>
+                                            <td>
+                                                Rp <?=$subtotal?>
+                                            </td>
+                                            <td>
+                                                <a href="javasript:void" class="text-danger"><i class="fa fa-times"></i></a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach;?>
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
                     <div class="col">
-                        <a href="shop.html" class="btn btn-default">Continue Shopping</a>
+                        <a href="<?php echo URL('shop.php')?>" class="btn btn-default">Continue Shopping</a>
                     </div>
                     <div class="col text-right">
-                   
                         <div class="clearfix"></div>
-                        <h6 class="mt-3">Total: Rp 180.000</h6>
+                        <h6 class="mt-3">Total: Rp <?=$total_price?></h6>
                         <a href="checkout.html" class="btn btn-lg btn-primary">Checkout <i class="fa fa-long-arrow-right"></i></a>
                     </div>
                 </div>

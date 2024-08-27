@@ -86,3 +86,34 @@ VALUES
 -- Adding a views colums to the `products` table
 ALTER TABLE products
 ADD views INT DEFAULT 0;
+
+
+-- Creating the `card` table
+CREATE TABLE card (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL, -- Name of the product
+    description TEXT,
+    product_id INT,
+    user_id INT,
+    category_id INT NOT NULL,
+    image VARCHAR(255) NOT NULL, -- The card (product) image
+    price DECIMAL(10, 2) NOT NULL,
+    discount INT DEFAULT 0,
+    discounted_price DECIMAL(10, 2) AS (price * (1 - discount / 100)) STORED,
+    stock INT NOT NULL, -- Available quantity in stock
+    product_quantity INT NOT NULL CHECK (product_quantity <= stock), -- Ensure product_quantity does not exceed stock
+    status BOOLEAN DEFAULT TRUE,
+    expiration_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES categories(id),
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+ALTER TABLE card
+ADD CONSTRAINT unique_user_product
+UNIQUE (user_id, product_id);
+
+
+
