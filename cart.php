@@ -49,59 +49,72 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php
-                                    $total_price = 0; // Initialize total price variable
+                                    <?php if (count($products) > 0): ?>
+                                        <?php
+                                            $total_price = 0; // Initialize total price variable
 
-                                    foreach ($products as $product):
-                                        // Updated Price
-                                        $discount = $product['discount'];
-                                        $price = $product['price'];
-                                        $updated_price = $price - ($price * $discount / 100);
+                                            foreach ($products as $product):
+                                                // Calculate updated price after discount
+                                                $updated_price = $product['price'] - ($product['price'] * $product['discount'] / 100);
 
-                                        // Total price for this row
-                                        $product_quantity = $product['product_quantity'];
-                                        $subtotal = $updated_price * $product_quantity;
+                                                // Calculate subtotal for the current product
+                                                $subtotal = $updated_price * $product['product_quantity'];
 
-                                        // Add to the total price
-                                        $total_price += $subtotal;
-                                ?>
-                                        <tr>
-                                            <td>
-                                                <img src='<?php echo URL("assets/img/$product[image]") ?>' width="60">
-                                            </td>
-                                            <td>
-                                                <?=$product['name']?><br>
-                                                <small>1000g</small>
-                                            </td>
-                                            <td>
-                                                Rp <?$updated_price?>
-                                            </td>
-                                            <td>
+                                                // Accumulate the subtotal into the total price
+                                                $total_price += $subtotal;
+                                        ?>
+                                            <tr>
+                                                <td>
+                                                    <img 
+                                                        src='<?= URL("assets/img/{$product['image']}") ?>' 
+                                                        width="60" 
+                                                        height="60"
+                                                        alt="<?= htmlspecialchars($product['name']) ?>"
+                                                    >
+                                                </td>
+                                                <td>
+                                                    <?= htmlspecialchars($product['name']) ?><br>
+                                                    <small>1000g</small>
+                                                </td>
+                                                <td class="pro_price">
+                                                    Rp <?= number_format($updated_price, 2, ',', '.') ?>
+                                                </td>
+                                                <td>
                                                 <input 
-                                                    class="form-control" 
+                                                    class="pro_qty form-control" 
                                                     type="number" 
-                                                    min="1" 
-                                                    data-bts-button-down-class="btn btn-primary" 
-                                                    data-bts-button-up-class="btn btn-primary" 
-                                                    value="<?=$product['product_quantity']?>" 
-                                                    name="vertical-spin"
+                                                    min="1"
+                                                    max="<?= htmlspecialchars($product['stock']) ?>" 
+                                                    value="<?= htmlspecialchars($product['product_quantity']) ?>" 
+                                                    name="quantity"
+                                                    data-product-id="<?= htmlspecialchars($product['product_id']) ?>"
                                                 >
-                                            </td>
-                                            <td>
-                                                <a 
-                                                    href="#" 
-                                                    class="btn btn-primary">UPDATE</a>
-                                            </td>
-                                            <td>
-                                                Rp <?=$subtotal?>
-                                            </td>
-                                            <td>
-                                                <a href="javasript:void" class="text-danger"><i class="fa fa-times"></i></a>
+
+                                                </td>
+                                                <td>
+                                                    <a href="" class="btn btn-primary update-btn">UPDATE</a>
+                                                </td>
+                                                <td>
+                                                    Rp <?= number_format($subtotal, 2, ',', '.') ?>
+                                                </td>
+                                                <td>
+                                                    <a data-product-id="<?=$product['product_id']?>" class="text-danger delete-btn cursor-pointer"><i class="fa fa-times"></i></a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <?php $total_price = 0;?>
+                                        <tr>
+                                            <td colspan="7">
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                    Your cart is empty. Go to the <a href="<?= URL('shop.php') ?>">shopping</a> page.
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>
                                             </td>
                                         </tr>
-                                    <?php endforeach;?>
-
+                                    <?php endif; ?>
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -110,7 +123,7 @@
                     </div>
                     <div class="col text-right">
                         <div class="clearfix"></div>
-                        <h6 class="mt-3">Total: Rp <?=$total_price?></h6>
+                        <h6 class="mt-3 total_price">Total: Rp <?=$total_price?></h6>
                         <a href="checkout.html" class="btn btn-lg btn-primary">Checkout <i class="fa fa-long-arrow-right"></i></a>
                     </div>
                 </div>
@@ -163,7 +176,7 @@
         </div>
     </div>
     <p class="copyright">&copy; 2018 Freshcery | Groceries Organic Store. All rights reserved.</p>
-</footer>
+    </footer>
 
 <script type="text/javascript" src="<?php echo URL('assets/js/jquery.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo URL('assets/js/jquery-migrate.js'); ?>"></script>
@@ -175,15 +188,88 @@
 <script type="text/javascript" src="<?php echo URL('assets/packages/thumbelina/thumbelina.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo URL('assets/packages/bootstrap-touchspin/bootstrap-touchspin.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo URL('assets/js/theme.js'); ?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
     <script>
         $(document).ready(function() {
+
             $(".form-control").keyup(function(){
                 var value = $(this).val();
                 value = value.replace(/^(0*)/,"");
                 $(this).val(1);
             });
 
+            $('.update-btn').click(function(e){
+                e.preventDefault();
+
+                // Get the row that contains the clicked button
+                var $row = $(this).closest('tr');
+
+                // Get the product ID and quantity from the input field
+                var product_id = $row.find('input[name="quantity"]').data('product-id');
+                var quantity = $row.find('input[name="quantity"]').val();
+
+                // Send the AJAX request to update the quantity
+                $.ajax({
+                    url: 'update_cart.php',
+                    method: 'POST',
+                    data: {
+                        product_id: product_id,
+                        quantity: quantity
+                    },
+                    success: function(response) {
+                        // Parse the response
+                        var data = JSON.parse(response);
+
+                        // Update the subtotal and total price
+                        $row.find('.pro_price').text(data.updated_price);
+                        $row.find('.pro_qty').val(data.quantity);
+                        $row.find('td:nth-child(6)').text('Rp ' + data.subtotal);
+                        $('.total_price').text('Rp ' + data.total_price);
+
+                        // Optionally display a success message
+                        alert('Cart updated successfully');
+                    }
+                });
+            });
+
+            $('.delete-btn').click(function(e){
+                e.preventDefault();
+
+                // Get the row that contains the clicked button
+                var $row = $(this).closest('tr');
+
+                // Get the product ID from the delete button
+                var product_id = $(this).data('product-id');
+
+                // Send the AJAX request to delete the product
+                $.ajax({
+                    url: 'delete_from_cart.php',
+                    method: 'POST',
+                    data: {
+                        product_id: product_id
+                    },
+                    success: function(response) {
+                        // Parse the response
+                        var data = JSON.parse(response);
+
+                        if (data.success) {
+                            // Remove the row from the table
+                            $row.remove();
+
+                            // Update the total price
+                            $('.total_price').text('Rp ' + data.total_price);
+
+                            // Optionally display a success message
+                            alert('Product removed successfully');
+                        } else {
+                            alert('Error removing product from cart');
+                        }
+                    }
+                });
+            });
+
+        
         })
     </script>
 </body>

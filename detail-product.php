@@ -204,24 +204,30 @@
                             <input type="hidden" name="category_id" value="<?= htmlspecialchars($product['category_id']); ?>">
 
                             <!-- Hidden input for the user ID -->
-                            <input type="hidden" name="user_id" value="<?= htmlspecialchars($_SESSION['user']['id']); ?>">
+                            <input type="hidden" name="user_id" value="<?= htmlspecialchars(@$_SESSION['user']['id']); ?>">
 
-                            <?php if ($product_in_card):?>
-                                <button 
-                                    class="btn-insert mt-4 btn btn-primary btn-lg"
-                                    disabled
-                                >
-                                    <i class="fa fa-shopping-basket"></i> Product Added
-                                </button>
+                            <?php if (isset($_SESSION['user'])):?>
+                                <?php if ($product_in_card):?>
+                                    <button 
+                                        class="btn-insert mt-4 btn btn-primary btn-lg"
+                                        disabled
+                                    >
+                                        <i class="fa fa-shopping-basket"></i> Product Added
+                                    </button>
+                                <?php else:?>
+                                    <button 
+                                        class="btn-insert mt-4 btn btn-primary btn-lg"
+                                        type="submit"
+                                        name="submit"
+                                    >
+                                        <i class="fa fa-shopping-basket"></i> Add to Cart
+                                    </button>
+                                <?php endif?>
                             <?php else:?>
-                                <button 
-                                    class="btn-insert mt-4 btn btn-primary btn-lg"
-                                    type="submit"
-                                    name="submit"
-                                >
-                                    <i class="fa fa-shopping-basket"></i> Add to Cart
-                                </button>
-                            <?php endif?>
+                                <div class="alert alert-warning mt-3" role="alert">
+                                    <a href="<?= URL('auth/login.php') ?>">Log in</a> to add this product to your cart
+                                </div>
+                            <?php endif;?>
 
                         </form>
                     </div>
