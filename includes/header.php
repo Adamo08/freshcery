@@ -1,10 +1,27 @@
-
+<?php 
+    session_start();
+    $user = @$_SESSION['user'];
+?>
 
 <?php
     // Including the helpers file
     include 'helpers/helpers.php';
-    session_start();
-    $user = @$_SESSION['user'];
+    // Including the database file
+    include 'config/config.php';
+
+?>
+
+<?php 
+    // Getting the number of products in the `card` table for the current user
+    $query = "SELECT COUNT(*) FROM card WHERE user_id = :user_id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':user_id', $user['id']);
+    $stmt->execute();
+
+    
+    $count = $stmt->fetchColumn();
+    $count = $count ? $count : 0; // If null, set count to 0
+
 ?>
 
 
@@ -59,34 +76,37 @@
                             <a href="<?php echo URL('contact.php'); ?>" class="nav-link">Contact</a>
                         </li>
 
-                        <?php if (!@$_SESSION['user']):?>
+                        <?php if (!@isset($_SESSION['user'])):?>
 
-                        <li class="nav-item">
-                            <a href="<?php echo URL('auth/register.php'); ?>" class="nav-link">Register</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?php echo URL('auth/login.php'); ?>" class="nav-link">Login</a>
-                        </li>
+                            <li class="nav-item">
+                                <a href="<?php echo URL('auth/register.php'); ?>" class="nav-link">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?php echo URL('auth/login.php'); ?>" class="nav-link">Login</a>
+                            </li>
                         
                         <?php else :?>
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <div class="avatar-header"><img src="<?php echo URL('assets/img/logo/profile.png'); ?>"></div> 
-                                <?php echo @$user['full_name']?>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="<?php echo URL('transaction.php'); ?>">Transactions History</a>
-                                <a class="dropdown-item" href="<?php echo URL('setting.php'); ?>">Settings</a>
-                                <a class="dropdown-item" href="<?php echo URL('auth/logout.php'); ?>">Log Out</a>
-                            </div>
-                        </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div class="avatar-header"><img src="<?php echo URL('assets/img/logo/profile.png'); ?>"></div> 
+                                    <?php echo @$user['full_name']?>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="<?php echo URL('transaction.php'); ?>">Transactions History</a>
+                                    <a class="dropdown-item" href="<?php echo URL('setting.php'); ?>">Settings</a>
+                                    <a class="dropdown-item" href="<?php echo URL('auth/logout.php'); ?>">Log Out</a>
+                                </div>
+                            </li>
 
-                        <li class="nav-item">
-                            <a href="<?php echo URL('cart.php'); ?>" class="nav-link" data-toggle="" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-shopping-basket"></i> <span class="badge badge-primary">5</span>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a href="<?php echo URL('cart.php'); ?>" class="nav-link" data-toggle="" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-shopping-basket"></i> 
+                                    <span class="badge badge-primary">
+                                        <?=$count?>
+                                    </span>
+                                </a>
+                            </li>
 
                         <?php endif;?>
 

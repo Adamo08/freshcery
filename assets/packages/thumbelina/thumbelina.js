@@ -3,12 +3,12 @@
     V1.0 Rev 1302190900
 
     A lightweight horizontal and vertical content slider designed for image thumbnails.
-    http://www.starplugins.com/thumbelina
+    http://www.staUSDlugins.com/thumbelina
 
     Developed by Star Plugins
-    http://www.starplugins.com
+    http://www.staUSDlugins.com
 
-    Copyright 2013, Star Plugins, www.starplugins.com
+    Copyright 2013, Star Plugins, www.staUSDlugins.com
     License: GNU General Public License, version 3 (GPL-3.0)
     http://www.opensource.org/licenses/gpl-3.0.html
 */

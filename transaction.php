@@ -42,7 +42,7 @@
                                             12-12-2017
                                         </td>
                                         <td>
-                                            Rp 200.000
+                                            USD 200.000
                                         </td>
                                         <td>
                                             Delivered

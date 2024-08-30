@@ -130,8 +130,8 @@
                                                 <?php
                                                     $discounted_price = $product['price'] * (1 - $product['discount'] / 100);
                                                 ?>
-                                                <span class="discount">Rp. <?= number_format($product['price'], 2, ',', '.'); ?></span>
-                                                <span class="reguler">Rp. <?= number_format($discounted_price, 2, ',', '.'); ?></span>
+                                                <span class="discount">USD. <?= number_format($product['price'], 2, ',', '.'); ?></span>
+                                                <span class="reguler">USD. <?= number_format($discounted_price, 2, ',', '.'); ?></span>
 
                                             </div>
                                             <a href="detail-product.php?id=<?= htmlspecialchars($product['id']); ?>" class="btn btn-block btn-primary">
@@ -212,8 +212,8 @@
                                                         $discounted_price = $product['price'] * (1 - $product['discount'] / 100);
                                                     ?>
                             
-                                                    <span class="discount">Rp. <?= number_format($product['price'], 2, ',', '.'); ?></span>
-                                                    <span class="reguler">Rp. <?= number_format($discounted_price, 2, ',', '.'); ?></span>
+                                                    <span class="discount">USD. <?= number_format($product['price'], 2, ',', '.'); ?></span>
+                                                    <span class="reguler">USD. <?= number_format($discounted_price, 2, ',', '.'); ?></span>
                                                 
                                                 </div>
                                                 <a href="detail-product.php?id=<?= htmlspecialchars($product['id']); ?>" class="btn btn-block btn-primary">

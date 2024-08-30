@@ -161,8 +161,8 @@
                             <div class="col-sm-6">
                                 <p>
                                     <strong>Price</strong> (/Pack)<br>
-                                    <span class="price">Rp <?=number_format($discounted_price, 2, ',', '.');?></span>
-                                    <span class="old-price">Rp <?=number_format($price, 2, ',', '.');?></span>
+                                    <span class="price">USD <?=number_format($discounted_price, 2, ',', '.');?></span>
+                                    <span class="old-price">USD <?=number_format($price, 2, ',', '.');?></span>
                                 </p>
                             </div>
                         
@@ -272,8 +272,8 @@
                                                     <a href="detail-product.php?id=<?= htmlspecialchars($product['id']); ?>"><?= htmlspecialchars($product['name']); ?></a>
                                                 </h4>
                                                 <div class="card-price">
-                                                    <span class="discount">Rp. <?= number_format($product['price'], 2, ',', '.'); ?></span>
-                                                    <span class="reguler">Rp. <?= number_format($product['price'] * (1 - $product['discount'] / 100), 2, ',', '.'); ?></span>
+                                                    <span class="discount">USD. <?= number_format($product['price'], 2, ',', '.'); ?></span>
+                                                    <span class="reguler">USD. <?= number_format($product['price'] * (1 - $product['discount'] / 100), 2, ',', '.'); ?></span>
                                                 </div>
                                                 <a href="detail-product.php?id=<?= htmlspecialchars($product['id']); ?>" class="btn btn-block btn-primary">
                                                     Add to Cart
@@ -352,11 +352,15 @@
 <script type="text/javascript" src="<?php echo URL('assets/js/theme.js'); ?>"></script>
     <script>
         $(document).ready(function() {
+
+
             $(".form-control").keyup(function(){
                 var value = $(this).val();
                 value = value.replace(/^(0*)/,"");
                 $(this).val(1);
             });
+
+
 
             $(".btn-insert").on("click",function(e){
                 e.preventDefault();
@@ -376,6 +380,8 @@
                         $(".btn-insert")
                             .html("<i class='fa fa-shopping-basket'></i> Product Added")
                             .prop("disabled",true);
+                        
+                        withRef();
                     },
                     error: function(xhr, status, error) {
                         // Handle error response from server
@@ -383,6 +389,11 @@
                     }
                 });
             });
+
+
+            function withRef(){
+                $("body").load("detail-product.php?id=<?=$id?>");
+            }
 
         })
     </script>

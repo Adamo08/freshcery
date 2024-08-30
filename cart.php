@@ -14,6 +14,24 @@
         $stmt->execute();
         $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        // Store the products in the session
+        $_SESSION['products'] = $products;
+
+    ?>
+
+    <?php 
+
+        if (isset($_POST['submit'])){
+            $tl_price = $_POST['total_price'];
+
+            // Storing the variable in the session
+            $_SESSION['price'] = $tl_price;
+
+            echo "<script> window.location.href = 'checkout.php';</script>";
+
+            exit(); // Stop further script execution
+        }
+    
     ?>
 
 
@@ -77,7 +95,7 @@
                                                     <small>1000g</small>
                                                 </td>
                                                 <td class="pro_price">
-                                                    Rp <?= number_format($updated_price, 2, ',', '.') ?>
+                                                    USD <?= number_format($updated_price, 2, ',', '.') ?>
                                                 </td>
                                                 <td>
                                                 <input 
@@ -95,7 +113,7 @@
                                                     <a href="" class="btn btn-primary update-btn">UPDATE</a>
                                                 </td>
                                                 <td>
-                                                    Rp <?= number_format($subtotal, 2, ',', '.') ?>
+                                                    USD <?= number_format($subtotal, 2, ',', '.') ?>
                                                 </td>
                                                 <td>
                                                     <a data-product-id="<?=$product['product_id']?>" class="text-danger delete-btn cursor-pointer"><i class="fa fa-times"></i></a>
@@ -122,10 +140,22 @@
                         <a href="<?php echo URL('shop.php')?>" class="btn btn-default">Continue Shopping</a>
                     </div>
                     <div class="col text-right">
-                        <div class="clearfix"></div>
-                        <h6 class="mt-3 total_price">Total: Rp <?=$total_price?></h6>
-                        <a href="checkout.html" class="btn btn-lg btn-primary">Checkout <i class="fa fa-long-arrow-right"></i></a>
+                        <form action="cart.php" method="POST">
+                            <div class="clearfix"></div>
+                            <h6 class="mt-3 total_price">Total: USD <?= number_format($total_price, 2, ',', '.'); ?></h6>
+                            <input type="hidden" name="total_price" value="<?= htmlspecialchars($total_price); ?>">
+                            <?php if (count($products) > 0):?>
+                                <button 
+                                    type="submit" name="submit" 
+                                    class="btn btn-lg btn-primary"
+                                >
+                                    Checkout 
+                                    <i class="fa fa-long-arrow-right"></i>
+                                </button>
+                            <?php endif;?>
+                        </form>
                     </div>
+
                 </div>
             </div>
         </section>
@@ -224,8 +254,8 @@
                         // Update the subtotal and total price
                         $row.find('.pro_price').text(data.updated_price);
                         $row.find('.pro_qty').val(data.quantity);
-                        $row.find('td:nth-child(6)').text('Rp ' + data.subtotal);
-                        $('.total_price').text('Rp ' + data.total_price);
+                        $row.find('td:nth-child(6)').text('USD ' + data.subtotal);
+                        $('.total_price').text('USD ' + data.total_price);
 
                         // Optionally display a success message
                         alert('Cart updated successfully');
@@ -258,16 +288,24 @@
                             $row.remove();
 
                             // Update the total price
-                            $('.total_price').text('Rp ' + data.total_price);
+                            $('.total_price').text('USD ' + data.total_price);
 
                             // Optionally display a success message
                             alert('Product removed successfully');
+                            // Reloading the page 
+                            reload();
+
                         } else {
                             alert('Error removing product from cart');
                         }
                     }
                 });
             });
+
+
+            function reload(){
+                $("body").load("cart.php");
+            }
 
         
         })

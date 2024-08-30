@@ -8,10 +8,18 @@
 
 
     // Database configuration
-    define('DB_HOST', 'localhost:4306');         // Database Hostname
-    define('DB_USERNAME', 'root');          // Database Username
-    define('DB_PASSWORD', '');      // Database Password
-    define('DB_NAME', 'Freshcery');       // Database Name
+    if (!defined('DB_HOST')) {
+        define('DB_HOST', 'localhost:4306');         // Database Hostname
+    }
+    if (!defined('DB_USERNAME')) {
+        define('DB_USERNAME', 'root');          // Database Username
+    }
+    if (!defined('DB_PASSWORD')) {
+        define('DB_PASSWORD', '');      // Database Password
+    }
+    if (!defined('DB_NAME')) {
+        define('DB_NAME', 'Freshcery');       // Database Name
+    }
 
 
     try {
