@@ -131,6 +131,7 @@ CREATE TABLE orders (
     phone VARCHAR(20) NOT NULL,
     order_notes TEXT,
     total_price DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'Pending', -- A column to track the order status
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

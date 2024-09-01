@@ -96,9 +96,8 @@
                     // Set session variable to indicate success
                     $_SESSION['checkout_success'] = true;
 
-                    // Redirect or success message
-                    header('Location: success.php'); // Redirect to a success page
-                    exit();
+                    // Redirect to the charge page
+                    echo "<script> window.location.href = 'charge.php' </script>";
 
                 } catch (PDOException $e) {
                     // Handle SQL errors
