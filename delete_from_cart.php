@@ -1,9 +1,24 @@
 <?php
+    
+    if (!isset($_SERVER['HTTP_REFERER'])){
+        header("Location: http://localhost/Freshcery/index.php");
+        exit();
+    }
+    
+?>
+
+<?php
 
     // Starting the session
     session_start();
 
     include 'config/config.php'; // Database connection
+
+    if (!isset($_SESSION['user'])){
+        // header("Location: localhost/Freshcery");
+        echo "<script> window.location.href = 'localhost/Freshcery' </script>";
+        exit();
+    }
 
     // Get the product ID from the POST request
     $product_id = $_POST['product_id'];

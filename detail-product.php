@@ -1,8 +1,27 @@
 
 
+    <?php
+        
+        if (!isset($_SERVER['HTTP_REFERER'])){
+            header("Location: http://localhost/Freshcery/index.php");
+            exit();
+        }
+        
+    ?>
+
     <?php 
         include_once "includes/header.php";
         include_once "config/config.php";
+    ?>
+
+    <?php 
+    
+        if (!isset($_SESSION['user'])){
+            // header("Location: localhost/Freshcery");
+            echo "<script> window.location.href = 'localhost/Freshcery' </script>";
+            exit();
+        }
+    
     ?>
 
 
@@ -46,6 +65,9 @@
                 }
             }
 
+        }
+        else {
+            echo "<script> window.location.href = 'localhost/Freshcery/404.php' </script>";
         }
 
         // Adding product to the card

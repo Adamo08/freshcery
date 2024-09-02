@@ -6,6 +6,14 @@
     // Starting the session
     session_start();
 
+    
+    if (!isset($_SESSION['user'])){
+        // header("Location: localhost/Freshcery");
+        echo "<script> window.location.href = 'localhost/Freshcery' </script>";
+        exit();
+    }
+    
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Get product ID and new quantity from AJAX request
         $product_id = $_POST['product_id'];

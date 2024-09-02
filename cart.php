@@ -6,6 +6,16 @@
     ?>
 
     <?php 
+    
+        if (!isset($_SESSION['user'])){
+            // header("Location: localhost/Freshcery");
+            echo "<script> window.location.href = 'localhost/Freshcery' </script>";
+            exit();
+        }
+    
+    ?>
+
+    <?php 
 
         // Getting the list of the products added by the user
         $sql = "SELECT * FROM card WHERE user_id = :user_id";

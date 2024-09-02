@@ -1,5 +1,5 @@
 <?php 
-    session_start();
+    @session_start();
     $user = @$_SESSION['user'];
 ?>
 
@@ -12,6 +12,7 @@
 ?>
 
 <?php 
+
     // Getting the number of products in the `card` table for the current user
     $query = "SELECT COUNT(*) FROM card WHERE user_id = :user_id";
     $stmt = $conn->prepare($query);
@@ -93,8 +94,8 @@
                                     <?php echo @$user['full_name']?>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="<?php echo URL('transaction.php'); ?>">Transactions History</a>
-                                    <a class="dropdown-item" href="<?php echo URL('setting.php'); ?>">Settings</a>
+                                    <a class="dropdown-item" href="<?php echo URL("transaction.php?id={$user['id']}"); ?>">Transactions History</a>
+                                    <a class="dropdown-item" href="<?php echo URL("setting.php?id={$user['id']}"); ?>">Settings</a>
                                     <a class="dropdown-item" href="<?php echo URL('auth/logout.php'); ?>">Log Out</a>
                                 </div>
                             </li>

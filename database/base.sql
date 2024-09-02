@@ -15,6 +15,19 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Timestamp of when the record was created
 );
 
+-- Associated table to the `users` table , holds additional info about the users
+CREATE TABLE user_details (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    state_country VARCHAR(100) NOT NULL,
+    postcode_zip VARCHAR(20) NOT NULL,
+    phone_number VARCHAR(20),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
 -- Insert random users
 INSERT INTO users (full_name, email, username, password,image)
 VALUES
@@ -25,6 +38,17 @@ VALUES
     ('Charlie Brown', 'charlie.brown@example.com', 'charlieb', SHA2('password123', 256),"charlie.jpg"),
 
     ('Dana White', 'dana.white@example.com', 'danaW', SHA2('password123', 256),"dana.png");
+
+-- Insert user details
+INSERT INTO user_details (user_id, address, city, state_country, postcode_zip, phone_number)
+VALUES
+    (1, '456 Elm St', 'Springfield', 'Illinois', '62702', '555-5678'),
+
+    (2, '789 Oak St', 'Springfield', 'Illinois', '62703', '555-8765'),
+
+    (3, '321 Pine St', 'Springfield', 'Illinois', '62704', '555-4321'),
+
+    (4, '654 Maple St', 'Springfield', 'Illinois', '62705', '555-6789');
 
 
 -- Creating a categories table

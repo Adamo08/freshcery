@@ -1,6 +1,26 @@
+    
+    <?php
+    
+        if (!isset($_SERVER['HTTP_REFERER'])){
+            header("Location: http://localhost/Freshcery/index.php");
+            exit();
+        }
+        
+    ?>
+    
     <?php 
         require "includes/header.php";
         require "config/config.php";
+    ?>
+
+    <?php 
+        
+        if (!isset($_SESSION['user'])){
+            // header("Location: localhost/Freshcery");
+            echo "<script> window.location.href = 'localhost/Freshcery' </script>";
+            exit();
+        }
+
     ?>
 
     <?php

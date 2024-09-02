@@ -1,4 +1,11 @@
-
+    <?php
+    
+        if (!isset($_SERVER['HTTP_REFERER'])){
+            header("Location: http://localhost/Freshcery/index.php");
+            exit();
+        }
+        
+    ?>
 
     <?php 
         include_once "includes/header.php";
@@ -11,6 +18,7 @@
             header('Location: localhost/Freshcery/');
             exit();
         }
+
 
     ?>
 
