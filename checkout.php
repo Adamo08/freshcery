@@ -24,10 +24,6 @@
 
     <?php 
 
-        // Function to sanitize input
-        function sanitizeInput($data) {
-            return htmlspecialchars(trim($data));
-        }
 
         if (isset($_POST['submit'])){
 
@@ -73,7 +69,7 @@
                 $errors[] = 'Invalid phone number format.';
             }
 
-             // If there are no errors, proceed to insert data
+            // If there are no errors, proceed to insert data
             if (empty($errors)) {
                 try {
                     // Prepare the SQL statement

@@ -67,7 +67,8 @@
 
         }
         else {
-            echo "<script> window.location.href = 'localhost/Freshcery/404.php' </script>";
+            echo "<script> window.location.href = ".URL('404.php')." </script>";
+            exit();
         }
 
         // Adding product to the card

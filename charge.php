@@ -12,7 +12,7 @@
     
             if (!isset($_SESSION['user'])){
                 // header("Location: localhost/Freshcery");
-                echo "<script> window.location.href = 'localhost/Freshcery' </script>";
+                echo "<script> window.location.href = 'http:://localhost/Freshcery/' </script>";
                 exit();
             }
         

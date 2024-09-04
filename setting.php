@@ -15,6 +15,12 @@
         if (isset($_GET['id'])){
             $id = $_GET['id'];
 
+            // Checking if the ID matches the user's id 
+            if ($id != $_SESSION['user']['id']){
+                echo "<script> window.location.href = 'http://localhost/Freshcery/' </script>";
+                exit();
+            }
+
             // Getting the user info from `user_details` table
             $sql = "
                 SELECT u.full_name, u.email, ud.address, ud.city, ud.state_country, ud.postcode_zip, ud.phone_number
@@ -30,6 +36,117 @@
 
             // print_r($user);
 
+            
+            $errors = [];
+            if (isset($_POST['submit'])){
+
+                $full_name = sanitizeInput($_POST['full_name']);
+                $address = sanitizeInput($_POST['address']);
+                $city = sanitizeInput($_POST['city']);
+                $state_country = sanitizeInput($_POST['state_country']);
+                $postcode_zip = sanitizeInput($_POST['postcode_zip']);
+                $email = sanitizeInput($_POST['email']);
+                $phone_number = sanitizeInput($_POST['phone_number']);
+
+                // Validating data
+                    // Validation
+                if (
+                        empty($full_name) || empty($address) || 
+                        empty($city) || empty($state_country) || 
+                        empty($postcode_zip) || empty($email) ||
+                        empty($phone_number)
+                ) {
+                    $errors[] = "All fields are required.";
+                } 
+                
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $errors[] = "Invalid email format.";
+                } 
+                if (!preg_match('/^[\d\s\+\-()]+$/', $phone_number)) {
+                    $errors[] = 'Invalid phone number format.';
+                }
+
+                // If there are no errors, proceed to insert data
+                if (empty($errors)) {
+                    try {
+                        // Prepare the SQL statement
+                        $stmt = $conn->prepare("UPDATE users u 
+                                INNER JOIN user_details ud 
+                                ON (u.id = ud.user_id)
+                                SET 
+                                    u.full_name = :full_name,
+                                    u.email = :email,
+                                    ud.address = :address,
+                                    ud.city = :city,
+                                    ud.state_country = :state_country,
+                                    ud.postcode_zip = :postcode_zip,
+                                    ud.phone_number = :phone_number
+                                
+                                WHERE u.id = :id AND ud.user_id = :id
+                        ");
+
+                        // Bind parameters
+                        $stmt->bindParam(":full_name", $full_name);
+                        $stmt->bindParam(":email", $email);
+                        $stmt->bindParam(":address", $address);
+                        $stmt->bindParam(":city", $city);
+                        $stmt->bindParam(":state_country", $state_country);
+                        $stmt->bindParam(":postcode_zip", $postcode_zip);
+                        $stmt->bindParam(":phone_number", $phone_number);
+                        $stmt->bindParam(":id",$id);
+
+
+
+                        // Execute the statement
+                        if ($stmt->execute()) {
+                            echo "<script> 
+                                swal({
+                                    title: 'Good job!',
+                                    text: 'Your information was updated successfully!',
+                                    icon: 'success',
+                                    button: 'Done!',
+                                });
+                            </script>";
+
+                            // Redirect the user to the index page
+                            // header("Location: index.php");
+                            echo "<script> window.location.href = 'http://localhost/Freshcery/' </script>";
+                            exit();
+
+                        } else {
+                            echo "<script> 
+                                swal({
+                                    title: 'Error!',
+                                    text: 'Something went wrong, try again!',
+                                    icon: 'warning',
+                                    button: 'Done!',
+                                });
+                            </script>";
+                        }
+
+
+                    } catch (PDOException $e) {
+                        // Handle SQL errors
+                        $errors[] = 'Error: ' . $e->getMessage();
+                    }
+
+                }
+
+
+                // If there are errors, join them into a single string for display
+                $error_messages = '';
+                if (!empty($errors)) {
+                    foreach ($errors as $error) {
+                        $error_messages .= '<div class="alert alert-danger">' . htmlspecialchars($error) . '</div>';
+                    }
+                }
+
+            }
+
+        }
+        else {
+            echo "<script> window.location.href = ".URL('404.php')." </script>";
+            exit();
         }
     
     ?>
@@ -54,7 +171,10 @@
                     <div class="col-xs-12 col-sm-6">
                         <h5 class="mb-3">ACCOUNT DETAILS</h5>
                         <!-- Bill Detail of the Page -->
-                        <form action="setting.php" class="bill-detail" method="POST">
+                        <form action="setting.php?id=<?=$id?>" class="bill-detail" method="POST">
+                            <?php if (!empty($error_messages)): ?>
+                                <?php echo $error_messages; ?>
+                            <?php endif; ?>
                             <fieldset>
                                 <div class="form-group row">
                                     <div class="col">
@@ -80,7 +200,7 @@
                                     <input 
                                         class="form-control" placeholder="Town / City" 
                                         type="text"
-                                        name="town_city"
+                                        name="city"
                                         value="<?php echo $user['city']; ?>"
                                     >
                                 </div>
