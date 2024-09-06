@@ -51,6 +51,46 @@ VALUES
     (4, '654 Maple St', 'Springfield', 'Illinois', '62705', '555-6789');
 
 
+
+-- Creating the `admins` table
+CREATE TABLE admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,   -- Unique identifier for each admin
+    full_name VARCHAR(255) NOT NULL,    -- Full name of the admin
+    email VARCHAR(255) NOT NULL UNIQUE, -- Email address (must be unique)
+    username VARCHAR(50) NOT NULL UNIQUE, -- Username (must be also)
+    image VARCHAR(255) DEFAULT NULL, -- image
+    password VARCHAR(255) NOT NULL,     -- Password (hashed)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Timestamp of when the record was created
+);
+
+-- Inserting random admin data
+INSERT INTO `admins` (full_name, email, username, image, password) 
+VALUES
+    (
+        'John Doe',
+        'johndoe@example.com',
+        'johndoe',
+        'images/johndoe.png',
+        SHA2('password123', 256) -- Hashing password with SHA2 256-bit encryption
+    ),
+    (
+        'Jane Smith',
+        'janesmith@example.com',
+        'janesmith',
+        'images/janesmith.png',
+        SHA2('password456', 256)
+    ),
+    (
+        'Robert Johnson',
+        'robertjohnson@example.com',
+        'robertj',
+        'images/robertjohnson.png',
+        SHA2('password789', 256)
+    );
+
+
+
+
 -- Creating a categories table
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -90,8 +130,10 @@ CREATE TABLE products (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Timestamp for last update
     is_active BOOLEAN DEFAULT TRUE,                   -- Whether the product is active or not
     sku VARCHAR(100) UNIQUE,                         -- Stock Keeping Unit for inventory management; must be unique
-    FOREIGN KEY (category_id) REFERENCES categories(id) -- Foreign key constraint
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE -- Foreign key constraint
 );
+
+
 
 -- Inserting some values to the `products` table
 INSERT INTO products (name, description, price, quantity, discount, category_id, image, sku, expiration_date)

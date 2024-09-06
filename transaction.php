@@ -66,7 +66,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table table-striped table-hover mt-4">
                                 <thead>
                                     <tr>
                                         <th width="5%">#</th>

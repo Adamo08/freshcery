@@ -57,12 +57,7 @@
 
     ?>
 
-    <?php 
-        // If a user is already loged in
-        if (isset($_SESSION['user'])){
-            header('Location: http://localhost/Freshcery/');
-        }
-    ?>
+
 
 
 
@@ -122,21 +117,6 @@
                         <li class="nav-item">
                             <a href="<?php echo URL('auth/login.php'); ?>" class="nav-link">Login</a>
                         </li>
-
-                        <!-- <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <div class="avatar-header"><img src="<?php echo URL('assets/img/logo/avatar.jpg'); ?>"></div> John Doe
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="<?php echo URL('transaction.php'); ?>">Transactions History</a>
-                                <a class="dropdown-item" href="<?php echo URL('setting.php'); ?>">Settings</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?php echo URL('cart.php'); ?>" class="nav-link" data-toggle="" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-shopping-basket"></i> <span class="badge badge-primary">5</span>
-                            </a>
-                        </li> -->
 
                     </ul>
                 </div>

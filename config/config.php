@@ -3,12 +3,12 @@
 <?php 
 
 
-    if (!isset($_SERVER['HTTP_REFERER'])){
+    // if (!isset($_SERVER['HTTP_REFERER'])){
 
-        echo "<script> window.location.href = ".URL()." </script>";
-        exit();
+    //     echo "<script> window.location.href = 'http:://localhost/Freshcery/' </script>";
+    //     exit();
 
-    }
+    // }
 
 
     // Database configuration
@@ -24,6 +24,8 @@
     if (!defined('DB_NAME')) {
         define('DB_NAME', 'Freshcery');       // Database Name
     }
+
+    
 
 
     try {

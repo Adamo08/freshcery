@@ -1,84 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
+    <?php require "layouts/header.php"?>
 
-<head>
-  <meta charset="utf-8">
-  <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
-  <title>Admin Panel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-  <link href="styles/style.css" rel="stylesheet">
-  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</head>
+    <?php 
 
-<body>
-  <div id="wrapper">
-    <nav class="navbar header-top fixed-top navbar-expand-lg  navbar-dark bg-dark">
-      <div class="container">
-        <a class="navbar-brand" href="#">LOGO</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
-          aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+      // Getting the count of : products, orders, categories and admins
+      $sql = "SELECT 
+            (SELECT COUNT(*) FROM products) AS count_p, 
+            (SELECT COUNT(*) FROM orders) AS count_o, 
+            (SELECT COUNT(*) FROM categories) AS count_c, 
+            (SELECT COUNT(*) FROM admins) AS count_a";
 
-        <div class="collapse navbar-collapse" id="navbarText">
-          <ul class="navbar-nav side-nav">
-            <li class="nav-item">
-              <a class="nav-link text-white" style="margin-left: 20px;" href="index.php">Home
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="admins/admins.php" style="margin-left: 20px;">Admins</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="categories-admins/show-categories.php" style="margin-left: 20px;">Categories</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="products-admins/show-products.php" style="margin-left: 20px;">Products</a>
-            </li>
+      // Preparing the query
+      $stmt = $conn->prepare($sql);
 
-            <li class="nav-item">
-              <a class="nav-link" href="orders-admins/show-orders.php" style="margin-left: 20px;">Orders</a>
-            </li>
+      // Executing the query
+      $stmt->execute();
 
-          </ul>
-          <ul class="navbar-nav ml-md-auto d-md-flex">
-            <li class="nav-item">
-              <a class="nav-link" href="index.php">Home
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="admins/login-admins.php">login
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                username
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Logout</a>
-
-            </li>
-
-
-          </ul>
-        </div>
-      </div>
-    </nav>
-    <div class="container-fluid">
+      // Fetching the result
+      $result = $stmt->fetch(PDO::FETCH_ASSOC);
+      
+    
+    ?>
 
       <div class="row">
         <div class="col-md-3">
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Products</h5>
-              <!-- <h6 class="card-subtitle mb-2 text-muted">Bootstrap 4.0.0 Snippet by pradeep330</h6> -->
-              <p class="card-text">number of products: 8</p>
+              <p class="card-text">number of products: <?=$result['count_p']?></p>
 
             </div>
           </div>
@@ -87,8 +35,7 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Orders</h5>
-              <!-- <h6 class="card-subtitle mb-2 text-muted">Bootstrap 4.0.0 Snippet by pradeep330</h6> -->
-              <p class="card-text">number of orders: 8</p>
+              <p class="card-text">number of orders: <?=$result['count_o']?></p>
 
             </div>
           </div>
@@ -98,7 +45,7 @@
             <div class="card-body">
               <h5 class="card-title">Categories</h5>
 
-              <p class="card-text">number of categories: 4</p>
+              <p class="card-text">number of categories: <?=$result['count_c']?></p>
 
             </div>
           </div>
@@ -108,19 +55,11 @@
             <div class="card-body">
               <h5 class="card-title">Admins</h5>
 
-              <p class="card-text">number of admins: 3</p>
+              <p class="card-text">number of admins: <?=$result['count_a']?></p>
 
             </div>
           </div>
         </div>
       </div>
-
-
-    </div>
-  </div>
-  <script type="text/javascript">
-
-  </script>
-</body>
-
-</html>
+    
+    <?php require "layouts/footer.php"?>

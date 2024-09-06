@@ -253,7 +253,7 @@
                         <div class="holder">
                             <h5 class="mb-3">YOUR ORDER</h5>
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table table-striped table-hover mt-4">
                                     <thead>
                                         <tr>
                                             <th>Products</th>
