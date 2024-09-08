@@ -96,6 +96,7 @@
 
                 <!-- Name input -->
                 <div class="form-outline mb-4 mt-4">
+                  <label for="form2Example1">Name: </label>
                   <input 
                       type="text" name="name" 
                       id="form2Example1" class="form-control" 
@@ -105,9 +106,10 @@
 
                 <!-- Description input -->
                 <div class="form-outline mb-4 mt-4">
+                  <label for="form2Example2">Description: </label>
                   <input 
                       type="text" name="description" 
-                      id="form2Example1" class="form-control" 
+                      id="form2Example2" class="form-control" 
                       placeholder="Description" value="<?=$c_description?>" 
                   />
                 </div>

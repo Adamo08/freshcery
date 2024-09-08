@@ -125,6 +125,7 @@ CREATE TABLE products (
     discount DECIMAL(5, 2) DEFAULT 0.00 CHECK (discount >= 0 AND discount <= 100), -- Discount percentage; must be between 0 and 100
     category_id INT,                                  -- Foreign key to link to a categories table
     image VARCHAR(255),                               -- Path to the product image
+    views INT DEFAULT 0,
     expiration_date DATE,                             -- Expiration date of the product
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,   -- Timestamp when the product was created
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Timestamp for last update
@@ -132,6 +133,7 @@ CREATE TABLE products (
     sku VARCHAR(100) UNIQUE,                         -- Stock Keeping Unit for inventory management; must be unique
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE -- Foreign key constraint
 );
+
 
 
 

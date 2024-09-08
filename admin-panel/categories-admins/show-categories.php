@@ -22,22 +22,52 @@
       ?>
 
       <?php 
-      
-        // Delete a category
-        if (isset($_GET['id'])){
-          $id = $_GET['id'];
-          $sql = "DELETE FROM categories WHERE id = :id";
-          $stmt = $conn->prepare($sql);
-          $stmt->bindParam(':id', $id);
+          // Deleting a category
+          if (isset($_GET['id'])) {
+              $id = $_GET['id'];
 
-          if ($stmt->execute()){
-            $success = "Category deleted successfully";
-          }else{
-            $error = "Failed to delete category";
+              // Step 1: Retrieve the image and icon filenames associated with the category
+              $sql = "SELECT image, icon FROM categories WHERE id = :id";
+              $stmt = $conn->prepare($sql);
+              $stmt->bindParam(':id', $id);
+              $stmt->execute();
+
+              // Fetch the result
+              $category = $stmt->fetch(PDO::FETCH_ASSOC);
+
+              if ($category) {
+                  // Define the file paths for the image and icon
+                  $image_path = "../../assets/img/categories/" . $category['image'];
+                  $icon_path = "../../assets/img/categories/" . $category['icon'];
+
+                  // Step 2: Check if the image and icon files exist, then delete them
+                  if (file_exists($image_path)) {
+                      unlink($image_path);  // Delete the image
+                  }
+
+                  if (file_exists($icon_path)) {
+                      unlink($icon_path);  // Delete the icon
+                  }
+
+                  // Step 3: Delete the category from the database
+                  $sql = "DELETE FROM categories WHERE id = :id";
+                  $stmt = $conn->prepare($sql);
+                  $stmt->bindParam(':id', $id);
+
+                  if ($stmt->execute()) {
+                      // Add an exit to ensure redirection
+                      $success = "Category deleted successfully";
+                  } else {
+                      $error = "Failed to delete category";
+                  }
+                }
+              // else {
+              //     // Category not found
+              //     echo "<script> window.location.href = '".APP_URL."404.php'; </script>";
+              // }
           }
-        }
-      
       ?>
+
 
       <div class="row">
         <div class="col">
