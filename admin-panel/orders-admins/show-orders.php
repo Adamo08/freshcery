@@ -205,6 +205,7 @@
               }
             },
             error: function() {
+              // If an error occured
               alert("An error occurred. Please try again.");
             }
           });
