@@ -204,7 +204,7 @@
                                         max="<?=$product['quantity']?>"
                                         data-bts-button-down-class="btn btn-primary" 
                                         data-bts-button-up-class="btn btn-primary" 
-                                        value="1" 
+                                        value="<?=@$_POST['quantity']?>" 
                                         name="quantity">
                                 </div>
                                 <div class="col-sm-6">

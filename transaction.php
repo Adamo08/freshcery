@@ -92,7 +92,7 @@
                                                     case 'completed':
                                                         $statusStyle = 'background-color: #4caf50; color: #fff; padding: 3px 10px; border-radius: 10px;';
                                                         break;
-                                                    case 'canceled':
+                                                    case 'cancelled':
                                                         $statusStyle = 'background-color: #f44336; color: #fff; padding: 3px 10px; border-radius: 10px;';
                                                         break;
                                                     default:

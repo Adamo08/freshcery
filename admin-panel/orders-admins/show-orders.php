@@ -43,6 +43,28 @@
                     <tbody>
                       <?php if ($o_count > 0):?>
                         <?php foreach ($orders as $order): ?>
+                          <?php 
+                            
+                            // Determine the class based on the order status
+                            $status = strtolower($order['status']); // Convert status to lowercase to standardize
+                            $statusStyle = '';
+
+                            switch ($status) {
+                                case 'pending':
+                                    $statusStyle = 'background-color: #ffcc00; color: #000; padding: 3px 10px; border-radius: 10px;';
+                                    break;
+                                case 'completed':
+                                    $statusStyle = 'background-color: #4caf50; color: #fff; padding: 3px 10px; border-radius: 10px;';
+                                    break;
+                                case 'cancelled':
+                                    $statusStyle = 'background-color: #f44336; color: #fff; padding: 3px 10px; border-radius: 10px;';
+                                    break;
+                                default:
+                                    $statusStyle = ''; // No styles if status doesn't match
+                                    break;
+                            }
+                            
+                          ?>
                           <tr>
                             <th scope="row">
                               <?=++$i?>
@@ -60,7 +82,7 @@
                               <?=$order['state_country']?>
                             </td>
                             <td>
-                              <?=$order['status']?>
+                              <span style="<?=$statusStyle?>"><?=$status?></span>
                             </td>
                             <td>
                               $<?=$order['total_price']?>
@@ -69,7 +91,16 @@
                               <?=$order['created_at']?>
                             </td>
                             <td>                
-                                <a href="update-orders.php?id=<?=$order['id']?>" class="btn btn-warning text-white mb-4 text-center">update</a>
+                                <button
+                                    type="button"
+                                    class="update-order-btn btn btn-warning text-white mb-4 text-center"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#updateModal"
+                                    data-order-id="<?=$order['id']?>"
+                                    data-order-status="<?=$order['status']?>"
+                                >
+                                  update
+                                </button>
                             </td>
                           </tr>
                         <?php endforeach;?>
@@ -95,5 +126,91 @@
           </div>
         </div>
     </div>
+
+
+
+    
+    <!-- Modal for Updating Order -->
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateModalLabel">Update Order</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="updateOrderForm">
+              <!-- Hidden input to store the order ID -->
+              <input type="hidden" name="order_id" id="modalOrderId">
+
+              <!-- Status selection -->
+              <div class="form-group">
+                <label for="status">Order Status:</label>
+                <select name="status" id="modalOrderStatus" class="form-control" required>
+                  <option value="Pending">Pending</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+
+              <button type="button" class="btn btn-primary mt-3" id="saveChangesBtn">Save changes</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Select all buttons with the class update-order-btn
+        var updateButtons = document.querySelectorAll('.update-order-btn');
+
+        // Loop through all buttons and add an event listener to each one
+        updateButtons.forEach(function(button) {
+          button.addEventListener('click', function() {
+            // Get the order ID from the data-order-id attribute
+            var orderId = this.getAttribute('data-order-id');
+            var orderStatus = this.getAttribute('data-order-status');
+
+            // Set the hidden input in the modal with the order ID
+            document.getElementById('modalOrderId').value = orderId;
+            document.getElementById('modalOrderStatus').value = orderStatus;
+          });
+        });
+
+        // Handle form submission with AJAX
+        $('#saveChangesBtn').click(function() {
+          // Serialize the form data
+          var formData = $('#updateOrderForm').serialize();
+
+          // Send the AJAX request
+          $.ajax({
+            type: "POST",
+            url: "update-orders.php",
+            data: formData,
+            dataType: "json",
+            success: function(response) {
+              if (response.success) {
+                
+                alert(response.message);
+
+                // swal("Good job!", response.message, "success");
+
+                // Reload the page or update the row with new status
+                location.reload();
+              } else {
+                alert(response.message);
+                // swal("Failed!", response.message, "warning");
+              }
+            },
+            error: function() {
+              alert("An error occurred. Please try again.");
+            }
+          });
+        });
+      });
+    </script>
+
 
 <?php require "../layouts/footer.php"; ?>
