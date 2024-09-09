@@ -1,27 +1,57 @@
-# Groceries Organic Store - Free Bootstrap 4 Template
-**Groceries Organic Store** is a responsive Bootstrap 4 Ecommerce Template. It provides you with a collection of ready to use some pages. You can use and customize this template as you want.
+# Food Ordering E-commerce Store
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/74de2307-6c91-46cc-b2f6-b1afcae8b07d/deploy-status)](https://app.netlify.com/sites/groceries-store-bs4/deploys)
+**Food Ordering E-commerce Store** is a comprehensive e-commerce platform built with PHP, MySQL, Bootstrap, and PDO. This project provides users with the ability to browse products by categories, add items to a cart, and proceed to checkout. It also features a fully functional admin panel for managing products, categories, and orders, with integration for PayPal sandbox for payment processing.
 
-## Demo
-[See DEMO](https://groceries.teguhrianto.my.id)
+## Features
 
-## Built With
-- [O2System UI](http://o2system.id/)
-- [Bootstrap](http://getbootstrap.com/)
-- [Popper.js](https://popper.js.org/)
-- [jQuery](https://jquery.com/)
-- [Pace](https://github.com/HubSpot/pace) - website preloader
-- [Owl Carousel](https://github.com/OwlCarousel2/OwlCarousel2)
-- [Cloud Zoom](https://github.com/smurfy/cloud-zoom)
-- [Sass/SCSS](http://sass-lang.com/)
-- [Font Awesome 5](http://fontawesome.com/)
+- **User Features:**
+  - Browse products by categories.
+  - Add products to the shopping cart.
+  - Proceed to checkout and complete purchases using PayPal.
+  
+- **Admin Features:**
+  - Manage products (add, update, delete).
+  - Manage categories (add, update, delete).
+  - View and manage orders.
+  - Update the status of orders.
+  - Admin login and authentication.
 
-## Ideas and Suggestions
-Please kindly mail me at [teguh.rianto22@gmail.com](mailto:teguh.rianto22@gmail.com])
+## Technologies Used
 
-## Support Me
-<a href="https://patreon.com/teguhrianto"><img src="https://img.shields.io/endpoint.svg?url=https://moshef9.wixsite.com/patreon-badge/_functions/badge/?username=teguhrianto" alt="Patreon donate button" /> </a>
+- **Backend:**
+  - PHP
+  - MySQL
+  - PDO for database access
+  
+- **Frontend:**
+  - Bootstrap
+  - HTML/CSS
+  - JavaScript/jQuery/Ajax
+  
+- **Payment Integration:**
+  - PayPal Sandbox for payment processing
+
+## Installation
+
+1. Clone the repository:
+    ```bash
+   git clone https://github.com/yourusername/food-ordering-ecommerce-store.git
+2. Navigate to the project directory:
+    ```bash
+    cd food-ordering-ecommerce-store
+3. Configuring & Setting the database :
+    - Create a MySQL database by importing the provided SQL schema in ```database/base.sql``` .
+    - Open config/config.php and update the database connection settings with your MySQL credentials (the ```DB_HOST``` constant).
+4. Set up PayPal SDK:
+    - Open ```charge.php``` and update the ```PayPal client ID``` and currency in the PayPal SDK script URL:
+      
+      ```bash
+      <!-- PayPal SDK -->
+      <script src="https://www.paypal.com/sdk/js?client-id=your-paypal-client-id&currency=USD"></script>
+    - Replace your-paypal-client-id with your actual PayPal client ID. The currency code USD can be changed to your preferred currency code.
 
 ## License
 Groceries Organic Store is licensed under The MIT License (MIT). Which means that you can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the final products. But you always need to state that [Teguh Rianto](https://github.com/teguhrianto) is the original author of this template.
+
+## Demo
+[See DEMO](https://groceries.teguhrianto.my.id)
