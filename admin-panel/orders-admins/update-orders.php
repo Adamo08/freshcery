@@ -2,7 +2,7 @@
         require "../../config/config.php";
 
 
-        // Updating Order Status
+        // Updating Order Status :
         if (isset($_POST['order_id']) && isset($_POST['status'])) {
             $order_id = $_POST['order_id'];
             $status = $_POST['status'];
