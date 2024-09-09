@@ -1,5 +1,5 @@
 -- Create the database
-CREATE DATABASE Freshcery;
+CREATE DATABASE IF NOT EXISTS Freshcery;
 
 -- Use the database
 USE Freshcery;
